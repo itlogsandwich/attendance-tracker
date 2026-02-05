@@ -3,8 +3,7 @@
 
 <template>
   <div class="flex min-h-screen text-white">
-    <main class="min-h-screen text-foreground">
-      <Navbar />
+    <main class="grow min-h-screen text-foreground">
       <slot />
     </main>
   </div>

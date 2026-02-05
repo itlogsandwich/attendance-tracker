@@ -37,13 +37,31 @@ definePageMeta({
         </div>
 
         <div class="w-full bg-blue-500">
-
-          02
+          <div class="flex flex-col m-20 justify-items-center justify-center align-center text-center">
+            <div class="w-full my-4 p-20 bg-red-400">
+              01
+            </div>
+            <div class="w-full my-4 p-20 bg-red-300">
+              02
+            </div>
+            <div class="w-full my-4 p-20 bg-red-200">
+              03
+            </div>
+          </div>
         </div>
 
         <div class="w-full bg-yellow-500">
-
-          03
+          <div class="flex flex-col m-20 justify-items-center justify-center align-center text-center">
+            <div class="w-full my-4 p-20 bg-red-400">
+              01
+            </div>
+            <div class="w-full my-4 p-20 bg-red-300">
+              02
+            </div>
+            <div class="w-full my-4 p-20 bg-red-200">
+              03
+            </div>
+          </div>
         </div>
 
       </div>

@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/hints', '@nuxt/ui'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/hints',
+    '@nuxt/ui',
+    'nuxt-auth-utils',
+  ],
   devtools: { enabled: true },
   compatibilityDate: '2025-07-15',
   css: ['./app/assets/css/main.css'],
