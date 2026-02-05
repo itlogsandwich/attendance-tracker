@@ -1,11 +1,35 @@
 <script setup lang="ts">
+
+const isCollapsed = ref(false)
 </script>
 
 <template>
   <main>
     <UDashboardGroup>
-      <UDashboardSidebar resizable collapsible>
-        <UDashboardSearchButton leading />
+      <UDashboardSidebar v-model:collapsed="isCollapsed" resizable collapsible>
+
+        <div class="h-10 flex items-center px-2 mb-2">
+          <h1 v-if="!isCollapsed" class="text-xl font-bold truncate">
+            SKLoud App
+          </h1>
+          <h1 v-else class="text-xl font-bold text-center w-full">
+            SK
+          </h1>
+        </div>
+
+        <UDashboardSearchButton leading :collapsed="isCollapsed" :label="isCollapsed ? undefined : 'Search...'" />
+        <div v-if="!isCollapsed" class="flex flex-col">
+          <ULink icon="i-lucide-home" to="#">
+            Dashboard
+          </ULink>
+          <ULink to="#">
+            Timesheet
+          </ULink>
+          <ULink to="#">
+            Project
+          </ULink>
+        </div>
+
       </UDashboardSidebar>
 
       <UDashboardSearch />
