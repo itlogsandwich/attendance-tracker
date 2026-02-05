@@ -1,6 +1,5 @@
 <template>
-  <Sonner />
-
+  <NuxtLoadingIndicator />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="flex min-h-screen text-white">
+  <div class="flex min-h-screen">
     <main class="grow min-h-screen text-foreground">
       <slot />
     </main>
