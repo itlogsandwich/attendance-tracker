@@ -3,7 +3,7 @@
 
 <template>
   <div class="flex min-h-screen">
-    <main class="grow min-h-screen text-foreground">
+    <main class="min-h-screen text-foreground">
       <slot />
     </main>
   </div>

@@ -19,13 +19,13 @@ const isCollapsed = ref(false)
 
         <UDashboardSearchButton leading :collapsed="isCollapsed" :label="isCollapsed ? undefined : 'Search...'" />
         <div v-if="!isCollapsed" class="flex flex-col">
-          <ULink icon="i-lucide-home" to="#">
+          <ULink to="/dashboard">
             Dashboard
           </ULink>
-          <ULink to="#">
+          <ULink to="/timesheet">
             Timesheet
           </ULink>
-          <ULink to="#">
+          <ULink to="/project">
             Project
           </ULink>
         </div>

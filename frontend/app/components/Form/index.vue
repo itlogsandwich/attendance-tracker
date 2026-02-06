@@ -15,16 +15,21 @@ const state = reactive<Partial<Schema>>({
   password: undefined
 })
 
+const emit = defineEmits<{
+  (e: 'submit', data: Schema): void
+}>()
+
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
-  console.log(event.data)
+  emit('submit', event.data)
 }
+
 </script>
 
 <template>
   <UContainer>
-    <UCard variant="subtle">
+    <UCard class="bg-gray-400" variant="soft">
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Email" name="email">
           <UInput v-model="state.email" />
