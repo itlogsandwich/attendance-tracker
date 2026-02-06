@@ -44,7 +44,6 @@ const sample_projects = ref<Project[]>([{
 }])
 
 
-// 1. Define your specific columns for the Project interface
 const columns: TableColumn<Project>[] = [
   {
     id: 'select',
@@ -63,7 +62,6 @@ const columns: TableColumn<Project>[] = [
   },
   {
     accessorKey: 'title',
-    // I kept the sorting logic here for the Project Name as it's the primary field
     header: ({ column }) => {
       const isSorted = column.getIsSorted()
       return h(UButton, {
