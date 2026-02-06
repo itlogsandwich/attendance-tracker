@@ -11,7 +11,7 @@ defineProps<Props>();
 <template>
   <UDashboardPanel>
     <template #header>
-      <UDashboardNavbar :title="title" color="primary" :toggle="{
+      <UDashboardNavbar class="shadow-sm" :title="title" :toggle="{
         color: 'primary',
         variant: 'subtle',
         class: 'rounded-full',

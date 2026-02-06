@@ -1,11 +1,202 @@
 <script setup lang="ts">
+import { h, resolveComponent } from 'vue'
+import type { TableColumn } from '@nuxt/ui'
+
+const UButton = resolveComponent('UButton')
+const UCheckbox = resolveComponent('UCheckbox')
+const UBadge = resolveComponent('UBadge')
+const UDropdownMenu = resolveComponent('UDropdownMenu')
+
 definePageMeta({
   layout: "main"
 })
+
+type Access = "Public" | "Private"
+
+interface Project {
+  title: string;
+  client: string;
+  tracked: boolean;
+  progress: number;
+  access: Access;
+};
+
+const sample_projects = ref<Project[]>([{
+  title: "SKLoud App",
+  client: "The People",
+  tracked: true,
+  progress: 50,
+  access: "Public",
+}, {
+  title: "Marketing",
+  client: "The People",
+  tracked: false,
+  progress: 90,
+  access: "Public",
+}, {
+
+  title: "Attendance Tracker",
+  client: "SKLoud",
+  tracked: true,
+  progress: 20,
+  access: "Private",
+
+}])
+
+
+// 1. Define your specific columns for the Project interface
+const columns: TableColumn<Project>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => h(UCheckbox, {
+      'modelValue': table.getIsSomePageRowsSelected() ? 'indeterminate' : table.getIsAllPageRowsSelected(),
+      'onUpdate:modelValue': (value: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!value),
+      'aria-label': 'Select all'
+    }),
+    cell: ({ row }) => h(UCheckbox, {
+      'modelValue': row.getIsSelected(),
+      'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
+      'aria-label': 'Select row'
+    }),
+    enableSorting: false,
+    enableHiding: false
+  },
+  {
+    accessorKey: 'title',
+    // I kept the sorting logic here for the Project Name as it's the primary field
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted()
+      return h(UButton, {
+        color: 'neutral',
+        variant: 'ghost',
+        label: 'Project Name',
+        icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
+        class: '-mx-2.5',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
+      })
+    }
+  },
+  {
+    accessorKey: 'client',
+    header: 'Client',
+    cell: ({ row }) => row.getValue('client')
+  },
+  {
+    accessorKey: 'tracked',
+    header: 'Status',
+    cell: ({ row }) => {
+      // Logic: Map boolean true/false to Success/Neutral colors
+      const isTracked = row.getValue('tracked') as boolean
+
+      return h(UBadge, {
+        class: 'capitalize',
+        variant: 'subtle',
+        color: isTracked ? 'success' : 'neutral'
+      }, () => isTracked ? 'Active' : 'Inactive')
+    }
+  },
+  {
+    accessorKey: 'progress',
+    header: 'Progress',
+    cell: ({ row }) => {
+      // Logic: Append '%' sign to the number
+      return `${row.getValue('progress')}%`
+    }
+  },
+  {
+    accessorKey: 'access',
+    header: 'Access',
+    cell: ({ row }) => {
+      // Logic: specific styling for access types if needed
+      const access = row.getValue('access') as string
+      return h(UBadge, {
+        variant: 'outline',
+        color: access === 'Private' ? 'warning' : 'primary'
+      }, () => access)
+    }
+  },
+  {
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const items = [{
+        label: 'Edit Project',
+        icon: 'i-lucide-pencil',
+        onSelect() {
+          console.log('Edit', row.original.title)
+        }
+      }, {
+        label: 'Copy Project Name',
+        icon: 'i-lucide-copy',
+        onSelect() {
+          // Assuming 'copy' and 'toast' are available in scope
+          navigator.clipboard.writeText(row.original.title)
+        }
+      }]
+
+      return h(UDropdownMenu, {
+        content: { align: 'end' },
+        items,
+        'aria-label': 'Actions'
+      }, () => h(UButton, {
+        icon: 'i-lucide-ellipsis-vertical',
+        color: 'neutral',
+        variant: 'ghost',
+        'aria-label': 'Actions'
+      }))
+    }
+  }
+]
 </script>
 
 <template>
   <AppPanel title="Project">
+    <div class="flex flex-row h-12 px-2 gap-2 items-center rounded-lg bg-gray-50">
+
+      <h1 class="flex-1 text-black text-center"> Filter </h1>
+
+      <USeparator orientation="vertical" />
+      <UButton trailing-icon="i-lucide-arrow-down" label="Active" class="flex-1 bg-gray-50 text-black justify-center ">
+      </UButton>
+
+      <USeparator orientation="vertical" />
+      <UButton trailing-icon="i-lucide-arrow-down" label="Client" class="flex-1 bg-gray-50 text-black justify-center">
+      </UButton>
+
+      <USeparator orientation="vertical" />
+      <UButton trailing-icon="i-lucide-arrow-down" label="Access" class="flex-1 bg-gray-50 text-black justify-center">
+      </UButton>
+
+      <USeparator orientation="vertical" />
+      <UButton trailing-icon="i-lucide-arrow-down" label="Billing" class="flex-1 bg-gray-50 text-black justify-center">
+
+      </UButton>
+
+      <USeparator orientation="vertical" />
+      <div class="flex-none">
+        <UInput leading-icon="i-lucide-search" class="w-full" placeholder="Find by name..." />
+      </div>
+
+      <UButton label="Apply" variant="outline">
+
+      </UButton>
+    </div>
+
+    <div>
+      <h1 class="text-center text-lg text-black font-bold rounded-t-lg bg-gray-200">Projects</h1>
+      <UTable ref="table" :data="sample_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-md">
+        <template #expanded="{ row }">
+          <div class="p-4 bg-gray-50/50">
+            <h3 class="text-sm font-bold mb-2">Detailed Project Metadata</h3>
+            <ul class="text-xs space-y-1">
+              <li><strong>Client ID:</strong> {{ row.original.client.toLowerCase().replace(' ', '-') }}</li>
+              <li><strong>Internal Access Level:</strong> {{ row.original.access }}</li>
+              <li><strong>Current Completion:</strong> {{ row.original.progress }}%</li>
+            </ul>
+          </div>
+        </template>
+      </UTable>
+    </div>
 
   </AppPanel>
 </template>

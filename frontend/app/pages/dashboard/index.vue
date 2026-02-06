@@ -6,19 +6,19 @@ definePageMeta({
 
 </script>
 <template>
-  <AppPanel title="Overall Stats">
+  <AppPanel title="Dashboard">
     <div class="flex flex-row w-full justify-between items-center">
       <div>
-        <h1 class="text-2xl text-black">Dashboard</h1>
+        <h1 class="text-2xl text-black">Overall Stats</h1>
       </div>
       <div class="flex justify-center gap-10">
-        <UButton color="primary" variant="subtle">
+        <UButton trailing-icon="i-lucide-arrow-down" color="primary" variant="subtle">
           Project
         </UButton>
-        <UButton color="primary" variant="subtle">
+        <UButton trailing-icon="i-lucide-arrow-down" color="primary" variant="subtle">
           Project
         </UButton>
-        <UButton icon="" class="w-50" color="primary" variant="subtle">
+        <UButton trailing-icon="i-lucide-arrow-down" color="primary" variant="subtle">
           Project
         </UButton>
       </div>
@@ -26,7 +26,7 @@ definePageMeta({
 
     <div class=" flex flex-row w-full h-full gap-6">
 
-      <div class="w-full h-[800px] border rounded-lg bg-gray-50">
+      <div class="w-full h-[800px] rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col items-center">
           <div class="grid grid-cols-3 rounded-t-md items-center text-center w-full h-30 bg-gray-200">
             <div>
@@ -42,7 +42,7 @@ definePageMeta({
               <h2 class="text-lg"> Myself </h2>
             </div>
           </div>
-          <div class="w-full h-86 items-center text-center">
+          <div class="w-full h-86 items-center text-center content-center">
             <div>
               <h1>SOME SORT OF GRAPH AND CHARTS </h1>
             </div>
@@ -64,7 +64,7 @@ definePageMeta({
         </div>
       </div>
 
-      <div class="w-1/3 h-[800px] border rounded-lg bg-gray-50">
+      <div class="w-1/3 h-[800px] rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col m-20 justify-items-center justify-center align-center text-center">
           <div class="w-full my-4 p-20 bg-red-400">
             01

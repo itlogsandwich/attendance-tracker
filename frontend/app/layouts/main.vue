@@ -6,7 +6,7 @@ const isCollapsed = ref(false)
 <template>
   <main>
     <UDashboardGroup>
-      <UDashboardSidebar v-model:collapsed="isCollapsed" resizable collapsible>
+      <UDashboardSidebar class="shadow-sm" v-model:collapsed="isCollapsed" resizable collapsible>
 
         <div class="h-10 flex items-center px-2 mb-2">
           <h1 v-if="!isCollapsed" class="text-xl font-bold truncate">
