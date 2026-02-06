@@ -8,7 +8,7 @@ const isCollapsed = ref(false)
     <UDashboardGroup>
       <UDashboardSidebar class="shadow-sm" v-model:collapsed="isCollapsed" resizable collapsible>
 
-        <div class="h-10 flex items-center px-2 mb-2">
+        <div class="h-10 flex items-center content-center px-1 mb-2">
           <h1 v-if="!isCollapsed" class="text-xl font-bold truncate">
             SKLoud App
           </h1>
@@ -18,23 +18,23 @@ const isCollapsed = ref(false)
         </div>
 
         <UDashboardSearchButton leading :collapsed="isCollapsed" :label="isCollapsed ? undefined : 'Search...'" />
-        <div v-if="!isCollapsed" class="flex flex-col content-center">
-          <ULink to="/dashboard">
-            <div class="items-center">
-              <UIcon name="i-lucide-layout-dashboard" size="20" />
-              <span class="content-center"> Dashboard </span>
-            </div>
+        <div v-if="!isCollapsed" class="flex flex-col content-center pb-2 gap-2">
+          <USeparator />
+          <ULink to="/dashboard" class="flex items-center gap-2">
+            <UIcon name="i-lucide-layout-dashboard" size="20" />
+            <span> Dashboard </span>
           </ULink>
-          <ULink to="/timesheet">
+          <ULink to="/timesheet" class="flex items-center gap-2">
             <UIcon name="i-lucide-calendar" size="20" />
-            Timesheet
+            <span class="content-center"> Timesheet </span>
           </ULink>
-          <ULink to="/project">
+          <ULink to="/project" class="flex items-center gap-2">
             <UIcon name="i-lucide-file-text" size="20" />
-            Project
+            <span class="content-center"> Project </span>
           </ULink>
         </div>
-        <div v-else class="flex flex-col items-center">
+        <div v-else class="flex flex-col items-center gap-2">
+          <USeparator />
           <ULink to="/dashboard">
             <div class="items-center">
               <UIcon name="i-lucide-layout-dashboard" size="20" />
