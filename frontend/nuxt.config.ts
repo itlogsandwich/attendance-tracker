@@ -1,0 +1,24 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/hints',
+    '@nuxt/ui',
+    'nuxt-auth-utils',
+  ],
+  devtools: { enabled: true },
+  compatibilityDate: '2026-02-06',
+  css: ['./app/assets/css/main.css'],
+
+  vite: {
+    build: {
+      sourcemap: false,
+    },
+  },
+
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+  },
+});
