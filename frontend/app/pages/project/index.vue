@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
+import type { Project } from '#shared/types/project'
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -11,30 +12,22 @@ definePageMeta({
   layout: "main"
 })
 
-type Access = "Public" | "Private"
-
-interface Project {
-  title: string;
-  client: string;
-  tracked: boolean;
-  progress: number;
-  access: Access;
-};
-
 const sample_projects = ref<Project[]>([{
+  id: 1,
   title: "SKLoud App",
   client: "The People",
   tracked: true,
   progress: 50,
   access: "Public",
 }, {
+  id: 2,
   title: "Marketing",
   client: "The People",
   tracked: false,
   progress: 90,
   access: "Public",
 }, {
-
+  id: 3,
   title: "Attendance Tracker",
   client: "SKLoud",
   tracked: true,
@@ -42,7 +35,6 @@ const sample_projects = ref<Project[]>([{
   access: "Private",
 
 }])
-
 
 const columns: TableColumn<Project>[] = [
   {
