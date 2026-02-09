@@ -5,9 +5,13 @@ definePageMeta({
   layout: "main"
 });
 
+const entries = ref<TimeEntry[]>([]);
+
+const search_task = ref<string>("");
+
 const current_entry = ref<TimeEntry | null>(null);
 
-let formatted_time = ref<string>("0:00:00");
+const formatted_time = ref<string>("0:00:00");
 
 let timer_interval: ReturnType<typeof setInterval> | null = null;
 
@@ -24,7 +28,7 @@ function startTimer() {
   const now = new Date();
 
   current_entry.value = {
-    title: "Working on something",
+    title: search_task.value,
     project: "Project Name",
     start_time: now.toISOString(),
     end_time: null,
@@ -50,8 +54,8 @@ function stopTimer() {
   }
 
   current_entry.value.end_time = new Date().toISOString();
+  entries.value.push(current_entry.value);
 
-  formatted_time = ref<string>("0:00:00");
   current_entry.value = null;
 }
 
@@ -60,8 +64,10 @@ function stopTimer() {
 <template>
   <AppPanel title="Timesheet">
 
-    <div id="add-entry" class="flex w-full h-16 bg-white shadow-md border border-gray-100 items-center px-4 gap-4">
-      <UInput placeholder="What project are you working on?" class="flex-1" :ui="{ base: 'text-lg' }" />
+    <div id="add-entry"
+      class="flex w-full h-16 bg-white shadow-md border border-gray-100 items-center px-4 gap-4 mb-10">
+      <UInput v-model="search_task" placeholder="What project are you working on?" class="flex-1"
+        :ui="{ base: 'text-lg' }" />
 
       <div class="items-center text-center">
         <span class="self-end text-center"> PROJECT NAME </span>
@@ -91,8 +97,36 @@ function stopTimer() {
       </div>
     </div>
 
-    <div id="list-entries">
+    <div v-for="entry in entries" id="list-entries"
+      class="flex w-full h-20 bg-white shadow-md border border-gray-100 items-center px-4 gap-4">
+      <UInput v-model="search_task" class="flex-none" :ui="{ base: 'text-lg' }" />
 
+      <div class="flex-1 items-center">
+        <span class="text-l"> {{ entry.project }}</span>
+      </div>
+      <div class="flex items-center h-8 gap-4 flex-none">
+
+        <USeparator orientation="vertical" />
+        <UIcon name="i-lucide-tag" class="size-5" />
+
+        <USeparator orientation="vertical" />
+        <UIcon name="i-lucide-philippine-peso" class="size-5" />
+
+        <USeparator orientation="vertical" />
+        <div class="flex items-center text-center gap-2 ">
+          <span class="self-end text-center"> {{ entry.start_time }} - {{ entry.end_time }} </span>
+          <UIcon name="i-lucide-calendar" class="size-5" />
+        </div>
+
+        <USeparator orientation="vertical" />
+
+        <UButton v-if="current_entry" trailing-icon="i-lucide-square" color="neutral" variant="ghost" @click="stopTimer"
+          class="px-8 font-bold rounded-none h-10">
+        </UButton>
+        <UButton v-else trailing-icon="i-lucide-play" color="neutral" variant="ghost" @click="startTimer"
+          class="px-8 font-bold rounded-none h-10">
+        </UButton>
+      </div>
     </div>
   </AppPanel>
 </template>
