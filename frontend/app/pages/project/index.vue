@@ -8,6 +8,24 @@ const UCheckbox = resolveComponent('UCheckbox')
 const UBadge = resolveComponent('UBadge')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
+const search_project = ref<string>("");
+
+const filtered_projects: any = computed(() => {
+  if (!sample_projects.value) return [];
+
+  if (!search_project.value) return sample_projects.value;
+
+  const search_term = search_project.value.toLowerCase();
+
+  return sample_projects.value.filter((project: Project) => {
+    return (
+      project.title.toLowerCase().includes(search_term) ||
+      project.client.toLowerCase().includes(search_term) ||
+      project.access.toLowerCase().includes(search_term)
+    )
+  })
+})
+
 definePageMeta({
   layout: "main"
 })
@@ -81,7 +99,7 @@ const columns: TableColumn<Project>[] = [
       return h(UBadge, {
         class: 'capitalize',
         variant: 'subtle',
-        color: is_tracked ? 'success' : 'neutral'
+        color: is_tracked ? 'success' : 'error'
       }, () => is_tracked ? 'Active' : 'Inactive')
     }
   },
@@ -164,7 +182,7 @@ const columns: TableColumn<Project>[] = [
 
       <USeparator orientation="vertical" />
       <div class="flex-none">
-        <UInput leading-icon="i-lucide-search" class="w-full" placeholder="Find by name..." />
+        <UInput v-model="search_project" leading-icon="i-lucide-search" class="w-full" placeholder="Apply filters..." />
       </div>
 
       <UButton label="Apply" variant="outline">
@@ -174,7 +192,7 @@ const columns: TableColumn<Project>[] = [
 
     <div>
       <h1 class="text-center text-lg text-black font-bold rounded-t-lg bg-gray-200">Projects</h1>
-      <UTable ref="table" :data="sample_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-md">
+      <UTable ref="table" :data="filtered_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-md">
         <template #expanded="{ row }">
           <div class="p-4 bg-gray-50/50">
             <h3 class="text-sm font-bold mb-2">Detailed Project Metadata</h3>
