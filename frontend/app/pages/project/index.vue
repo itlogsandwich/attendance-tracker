@@ -159,7 +159,7 @@ const columns: TableColumn<Project>[] = [
 
 <template>
   <AppPanel title="Project">
-    <div class="flex flex-row h-12 px-2 gap-2 items-center rounded-lg bg-gray-50">
+    <div class="flex flex-row h-12 px-2 shadow-md gap-2 items-center rounded-lg bg-gray-50">
 
       <h1 class="flex-1 text-black text-center"> Filter </h1>
 

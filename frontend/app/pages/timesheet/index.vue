@@ -65,9 +65,9 @@ function stopTimer() {
   <AppPanel title="Timesheet">
 
     <div id="add-entry"
-      class="flex w-full h-16 bg-white shadow-md border border-gray-100 items-center px-4 gap-4 mb-10">
+      class="flex w-full h-16 bg-white shadow-md rounded-md border border-gray-100 items-center px-4 gap-4 mb-10">
       <UInput v-model="search_task" placeholder="What project are you working on?" class="flex-1"
-        :ui="{ base: 'text-lg' }" />
+        :ui="{ base: 'text-md' }" />
 
       <div class="items-center text-center">
         <span class="self-end text-center"> PROJECT NAME </span>
@@ -98,34 +98,41 @@ function stopTimer() {
     </div>
 
     <div v-for="entry in entries" id="list-entries"
-      class="flex w-full h-20 bg-white shadow-md border border-gray-100 items-center px-4 gap-4">
-      <UInput v-model="search_task" class="flex-none" :ui="{ base: 'text-lg' }" />
+      class="flex flex-col w-full bg-white shadow-md  rounded-md border border-gray-100">
 
-      <div class="flex-1 items-center">
-        <span class="text-l"> {{ entry.project }}</span>
+      <div class="flex h-8 px-2 rounded-t-md justify-between bg-gray-200">
+        <span class="self-end"> Today </span>
       </div>
-      <div class="flex items-center h-8 gap-4 flex-none">
 
-        <USeparator orientation="vertical" />
-        <UIcon name="i-lucide-tag" class="size-5" />
+      <div class="flex flex-row items-center p-1 gap-4">
+        <UInput v-model="search_task" class="flex-none" :ui="{ base: 'text-md' }" />
 
-        <USeparator orientation="vertical" />
-        <UIcon name="i-lucide-philippine-peso" class="size-5" />
-
-        <USeparator orientation="vertical" />
-        <div class="flex items-center text-center gap-2 ">
-          <span class="self-end text-center"> {{ entry.start_time }} - {{ entry.end_time }} </span>
-          <UIcon name="i-lucide-calendar" class="size-5" />
+        <div class="flex-1 items-center">
+          <span class="text-l"> {{ entry.project }}</span>
         </div>
+        <div class="flex items-center h-8 gap-4 flex-none">
 
-        <USeparator orientation="vertical" />
+          <USeparator orientation="vertical" />
+          <UIcon name="i-lucide-tag" class="size-5" />
 
-        <UButton v-if="current_entry" trailing-icon="i-lucide-square" color="neutral" variant="ghost" @click="stopTimer"
-          class="px-8 font-bold rounded-none h-10">
-        </UButton>
-        <UButton v-else trailing-icon="i-lucide-play" color="neutral" variant="ghost" @click="startTimer"
-          class="px-8 font-bold rounded-none h-10">
-        </UButton>
+          <USeparator orientation="vertical" />
+          <UIcon name="i-lucide-philippine-peso" class="size-5" />
+
+          <USeparator orientation="vertical" />
+          <div class="flex items-center text-center gap-2 ">
+            <span class="self-end text-center"> {{ entry.start_time }} - {{ entry.end_time }} </span>
+            <UIcon name="i-lucide-calendar" class="size-5" />
+          </div>
+
+          <USeparator orientation="vertical" />
+
+          <UButton v-if="current_entry" trailing-icon="i-lucide-square" color="neutral" variant="ghost"
+            @click="stopTimer" class="px-8 font-bold rounded-none h-10">
+          </UButton>
+          <UButton v-else trailing-icon="i-lucide-play" color="neutral" variant="ghost" @click="startTimer"
+            class="px-8 font-bold rounded-none h-10">
+          </UButton>
+        </div>
       </div>
     </div>
   </AppPanel>
