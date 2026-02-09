@@ -55,12 +55,12 @@ const columns: TableColumn<Project>[] = [
   {
     accessorKey: 'title',
     header: ({ column }) => {
-      const isSorted = column.getIsSorted()
+      const is_sorted = column.getIsSorted()
       return h(UButton, {
         color: 'neutral',
         variant: 'ghost',
         label: 'Project Name',
-        icon: isSorted ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
+        icon: is_sorted ? (is_sorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow') : 'i-lucide-arrow-up-down',
         class: '-mx-2.5',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
@@ -76,13 +76,13 @@ const columns: TableColumn<Project>[] = [
     header: 'Status',
     cell: ({ row }) => {
       // Logic: Map boolean true/false to Success/Neutral colors
-      const isTracked = row.getValue('tracked') as boolean
+      const is_tracked = row.getValue('tracked') as boolean
 
       return h(UBadge, {
         class: 'capitalize',
         variant: 'subtle',
-        color: isTracked ? 'success' : 'neutral'
-      }, () => isTracked ? 'Active' : 'Inactive')
+        color: is_tracked ? 'success' : 'neutral'
+      }, () => is_tracked ? 'Active' : 'Inactive')
     }
   },
   {
