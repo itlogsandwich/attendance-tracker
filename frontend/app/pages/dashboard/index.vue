@@ -3,7 +3,6 @@ definePageMeta({
   layout: 'main',
 });
 
-
 </script>
 <template>
   <AppPanel title="Dashboard">
@@ -24,7 +23,7 @@ definePageMeta({
       </div>
     </div>
 
-    <div class=" flex flex-row w-full h-full gap-6">
+    <div class=" flex flex-row w-full h-full gap-6 mb-2">
 
       <div class="w-full h-[800px] rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col items-center">
@@ -80,5 +79,4 @@ definePageMeta({
 
     </div>
   </AppPanel>
-
 </template>

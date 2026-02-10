@@ -1,2 +1,2 @@
 # attendance-tracker
-Attendance tracker for skloud
+Attendance tracker for skloud (practice)
