@@ -13,10 +13,10 @@ class TimeEntryController extends Controller
     {
         $timeEntries = TimeEntry::with('project')->get();
 
-        return timeEntries;
+        return response()->json($timeEntries, 200);
     }
 
-    public function startTimeEntry(Request request)
+    public function startTimeEntry(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -35,7 +35,7 @@ class TimeEntryController extends Controller
         return response()->json($timeEntry, 201);
     }
 
-    public function stopTimeEntry(Request request, $id)
+    public function stopTimeEntry(Request $request, $id)
     {
         $validated = $request->validate([
             'end_time' => 'required|date',

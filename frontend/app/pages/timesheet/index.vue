@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { TimeEntry } from "#shared/types/time-entry";
-import type { Project } from "#shared/types/project";
 definePageMeta({
   layout: "main"
 });
 
-const entries = ref<TimeEntry[]>([]);
+const config = useRuntimeConfig();
+
+const { data: entries, refresh } = await useFetch<TimeEntry[]>(`${config.public.apiBase}/time-entries`);
 
 const search_task = ref<string>("");
 
@@ -22,41 +23,66 @@ function formatDuration(seconds: number): string {
   return `${h}:${m}:${s}`;
 }
 
-function startTimer() {
+async function startTimer() {
   if (current_entry.value) return;
 
   const now = new Date();
+  try {
+    const response_cookie = await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
+      method: 'GET',
+      credentials: 'include',
+    });
+    console.log("CSRF Cookie Response:", response_cookie);
 
-  current_entry.value = {
-    title: search_task.value,
-    project_id: null,
-    start_time: now.toISOString(),
-    end_time: null,
-    total_seconds: 0
-  };
+    const response = await $fetch<TimeEntry>(`${config.public.apiBase}/time-entries`, {
+      method: 'POST',
+      credentials: 'include',
+      body: {
+        title: search_task.value.trim(),
+        project_id: null,
+        start_time: now.toISOString(),
+      }
+    });
 
-  timer_interval = setInterval(() => {
-    if (!current_entry.value) return;
+    current_entry.value = response;
 
-    const start_time = new Date(current_entry.value.start_time);
-    const elapsed_seconds = Math.floor((Date.now() - start_time.getTime()) / 1000);
-    current_entry.value.total_seconds = elapsed_seconds;
-    formatted_time.value = formatDuration(elapsed_seconds);
-  }, 1000);
+    timer_interval = setInterval(() => {
+      if (!current_entry.value) return;
+
+      const start_time = new Date(current_entry.value.start_time);
+      const elapsed_seconds = Math.floor((Date.now() - start_time.getTime()) / 1000);
+      current_entry.value.total_seconds = elapsed_seconds;
+      formatted_time.value = formatDuration(elapsed_seconds);
+    }, 1000);
+
+  }
+  catch (err) {
+    console.error("Failed to POST time entry:", err);
+  }
 }
 
-function stopTimer() {
+async function stopTimer() {
   if (!current_entry.value) return;
 
-  if (timer_interval) {
-    clearInterval(timer_interval);
-    timer_interval = null;
+  const end_time = new Date().toISOString();
+
+  try {
+
+    await $fetch(`${config.public.apiBase}/time-entries/${current_entry.value.id}`, {
+      method: 'PATCH',
+      body: {
+        end_time,
+      }
+    });
+
+    current_entry.value = null;
+    formatted_time.value = "00:00:00";
+
+    await refresh();
   }
-
-  current_entry.value.end_time = new Date().toISOString();
-  entries.value.push(current_entry.value);
-
-  current_entry.value = null;
+  catch (err) {
+    console.error("Failed to PATCH time entry:", err);
+  }
 }
 
 </script>
