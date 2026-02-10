@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('client');
             $table->boolean('is_tracked')->default(false);
             $table->integer('progress')->default(0);
-            $table->string('access');
+            $table->enum('access', ['Public', 'Private']);
             $table->timestamps();
         });
     }
