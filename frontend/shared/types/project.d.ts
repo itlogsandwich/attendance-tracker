@@ -1,10 +1,10 @@
-type Access = "Public" | "Private"
+export type Access = "Public" | "Private"
 
 export interface Project {
   id: number;
   title: string;
   client: string;
-  tracked: boolean;
+  is_tracked: boolean;
   progress: number;
   access: Access;
 };

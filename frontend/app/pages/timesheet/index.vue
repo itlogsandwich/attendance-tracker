@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimeEntry } from "#shared/types/time-entry";
-
+import type { Project } from "#shared/types/project";
 definePageMeta({
   layout: "main"
 });
@@ -29,7 +29,7 @@ function startTimer() {
 
   current_entry.value = {
     title: search_task.value,
-    project: "Project Name",
+    project_id: null,
     start_time: now.toISOString(),
     end_time: null,
     total_seconds: 0
@@ -108,7 +108,7 @@ function stopTimer() {
         <UInput v-model="search_task" class="flex-none" :ui="{ base: 'text-md' }" />
 
         <div class="flex-1 items-center">
-          <span class="text-l"> {{ entry.project }}</span>
+          <span class="text-l"> {{ entry.project?.title || "No Project" }}</span>
         </div>
         <div class="flex items-center h-8 gap-4 flex-none">
 
