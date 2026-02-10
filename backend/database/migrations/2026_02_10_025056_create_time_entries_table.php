@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('time_entries', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
-            $table->unsignedBigInteger('project_id');
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->nullable()->references('id')->on('projects')->onDelete('cascade');
             $table->timestamp('start_time');
             $table->timestamp('end_time')->nullable();
-            $table->integer('total_seconds')->default(0);
+            $table->double('total_seconds')->default(0);
             $table->timestamps();
         });
     }

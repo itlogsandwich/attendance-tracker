@@ -34,9 +34,15 @@ async function startTimer() {
     });
     console.log("CSRF Cookie Response:", response_cookie);
 
+    const xsrfToken = useCookie('XSRF-TOKEN').value;
+
     const response = await $fetch<TimeEntry>(`${config.public.apiBase}/time-entries`, {
       method: 'POST',
       credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'X-XSRF-TOKEN': xsrfToken || '',
+      },
       body: {
         title: search_task.value.trim(),
         project_id: null,
@@ -56,8 +62,12 @@ async function startTimer() {
     }, 1000);
 
   }
-  catch (err) {
-    console.error("Failed to POST time entry:", err);
+  catch (err: any) {
+    if (err.response?._data?.errors) {
+      console.error("Validation Errors:", err.response._data.errors);
+    } else {
+      console.error("General Error:", err);
+    }
   }
 }
 
@@ -68,10 +78,18 @@ async function stopTimer() {
 
   try {
 
+    const xsrfToken = useCookie('XSRF-TOKEN').value;
     await $fetch(`${config.public.apiBase}/time-entries/${current_entry.value.id}`, {
-      method: 'PATCH',
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': xsrfToken || '',
+      },
       body: {
-        end_time,
+        _method: 'PATCH',
+        end_time: end_time,
       }
     });
 

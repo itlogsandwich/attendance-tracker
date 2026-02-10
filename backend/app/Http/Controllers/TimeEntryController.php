@@ -11,7 +11,7 @@ class TimeEntryController extends Controller
 {
     public function index()
     {
-        $timeEntries = TimeEntry::with('project')->get();
+        $timeEntries = TimeEntry::all();
 
         return response()->json($timeEntries, 200);
     }
@@ -19,8 +19,8 @@ class TimeEntryController extends Controller
     public function startTimeEntry(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'project_id' => 'nullable|exists:projects,id',
+            'title' => 'nullable|string|max:255',
+            'project_id' => 'nullable',
             'start_time' => 'required|date',
         ]);
 
@@ -47,7 +47,7 @@ class TimeEntryController extends Controller
         $start = Carbon::parse($timeEntry->start_time);
         $end = Carbon::parse($validated['end_time']);
 
-        $totalSeconds = $end->diffInSeconds($start);
+        $totalSeconds = $start->diffInSeconds($end);
 
         $timeEntry->update([
             'end_time' => $validated['end_time'],
