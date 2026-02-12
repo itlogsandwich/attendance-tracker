@@ -10,6 +10,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-02-06',
   css: ['./app/assets/css/main.css'],
 
+  imports: {
+    dirs: [
+      'app/composables/**',
+      '~/utils'
+    ],
+  },
+
   runtimeConfig: {
     public:
     {

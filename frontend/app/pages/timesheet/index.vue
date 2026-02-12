@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TimeEntry } from "#shared/types/time-entry";
+import { formatDuration } from "~/composables/formatDuration";
 definePageMeta({
   layout: "main"
 });
@@ -15,13 +16,6 @@ const current_entry = ref<TimeEntry | null>(null);
 const formatted_time = ref<string>("0:00:00");
 
 let timer_interval: ReturnType<typeof setInterval> | null = null;
-
-function formatDuration(seconds: number): string {
-  const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
-  const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-  const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-  return `${h}:${m}:${s}`;
-}
 
 async function startTimer() {
   if (current_entry.value) return;
