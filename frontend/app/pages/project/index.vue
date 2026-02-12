@@ -90,11 +90,11 @@ const columns: TableColumn<Project>[] = [
     cell: ({ row }) => row.getValue('client')
   },
   {
-    accessorKey: 'tracked',
+    accessorKey: 'is_tracked',
     header: 'Status',
     cell: ({ row }) => {
       // Logic: Map boolean true/false to Success/Neutral colors
-      const is_tracked = row.getValue('tracked') as boolean
+      const is_tracked = row.getValue('is_tracked') as boolean
 
       return h(UBadge, {
         class: 'capitalize',
