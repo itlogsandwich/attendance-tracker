@@ -14,4 +14,6 @@ Route::prefix('v1')->group(function()
     Route::get('/time-entries', [TimeEntryController::class, 'index'])->name("timeEntries.index");
     Route::post('/time-entries', [TimeEntryController::class, 'startTimeEntry'])->name("timeEntries.start");
     Route::patch('/time-entries/{id}', [TimeEntryController::class, 'stopTimeEntry'])->name("timeEntries.stop");
+
+    Route::get('/projects', [ProjectController::class, 'index'])->name("projects.index");
 });
