@@ -1,7 +1,61 @@
 <script setup lang="ts">
+import type { Project } from "#shared/types/project";
+import type { TimeEntry } from "#shared/types/time-entry";
+
 definePageMeta({
   layout: 'main',
 });
+
+const config = useRuntimeConfig();
+const { data: entries } = await useFetch<TimeEntry[]>(`${config.public.apiBase}/time-entries`, {
+  default: () => [],
+});
+const { data: projects } = await useFetch<Project[]>(`${config.public.apiBase}/projects`, {
+  default: () => [],
+});
+
+const total_time = computed(() => {
+  const entries_data = entries.value;
+  const projects_data = projects.value;
+
+  if (!entries_data || !projects_data) return "0:00:0";
+
+  return totalTime(entries_data, projects_data)
+});
+
+const category_label = ref<string>("Project");
+
+const filter_category = [
+  {
+    label: 'Project',
+    icon: 'i-lucide-file-text',
+    value: 'project',
+    onSelect: () => { category_label.value = "Project" }
+  },
+  {
+    label: 'Billable',
+    icon: 'i-lucide-philippine-peso',
+    value: 'billable',
+    onSelect: () => { category_label.value = "Billable" }
+  },
+]
+
+const who_label = ref<string>("Only me");
+
+const filter_who = [
+  {
+    label: 'Only me',
+    icon: 'i-lucide-user',
+    value: 'only_me',
+    onSelect: () => { who_label.value = "Only me" }
+  },
+  {
+    label: 'Team',
+    icon: 'i-lucide-users',
+    value: 'team',
+    onSelect: () => { who_label.value = "Team" }
+  },
+]
 
 </script>
 <template>
@@ -11,15 +65,20 @@ definePageMeta({
         <h1 class="text-2xl text-black">Overall Stats</h1>
       </div>
       <div class="flex justify-center gap-10">
-        <UButton trailing-icon="i-lucide-arrow-down" color="primary" variant="subtle">
-          Project
-        </UButton>
-        <UButton trailing-icon="i-lucide-arrow-down" color="primary" variant="subtle">
-          Project
-        </UButton>
-        <UButton trailing-icon="i-lucide-arrow-down" color="primary" variant="subtle">
-          Project
-        </UButton>
+
+        <UDropdownMenu :items="filter_category" arrow :content="{ side: 'bottom', align: 'start' }">
+          <UButton trailing-icon="i-lucide-chevron-down" :label="category_label" color="neutral" variant="subtle" />
+        </UDropdownMenu>
+
+        <UDropdownMenu :items="filter_who" arrow :content="{ side: 'bottom', align: 'start' }">
+          <UButton trailing-icon="i-lucide-chevron-down" :label="who_label" color="neutral" variant="subtle">
+          </UButton>
+        </UDropdownMenu>
+
+        <UDropdownMenu :items="filter_who" arrow :content="{ side: 'bottom', align: 'start' }">
+          <UButton trailing-icon="i-lucide-chevron-down" label="Something" color="neutral" variant="subtle">
+          </UButton>
+        </UDropdownMenu>
       </div>
     </div>
 
@@ -30,7 +89,7 @@ definePageMeta({
           <div class="grid grid-cols-3 rounded-t-md items-center text-center w-full h-30 bg-gray-200">
             <div>
               <h1 class="text-2xl"> Total Time</h1>
-              <h2 class="text-lg"> 676767 </h2>
+              <h2 class="text-lg"> {{ total_time }} </h2>
             </div>
             <div>
               <h1 class="text-2xl"> Top Project </h1>

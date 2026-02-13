@@ -8,16 +8,20 @@ const UCheckbox = resolveComponent('UCheckbox')
 const UBadge = resolveComponent('UBadge')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
+const config = useRuntimeConfig();
+
+const { data: projects } = await useFetch<Project[]>(`${config.public.apiBase}/projects`);
+
 const search_project = ref<string>("");
 
 const filtered_projects: any = computed(() => {
-  if (!sample_projects.value) return [];
+  if (!projects.value) return [];
 
-  if (!search_project.value) return sample_projects.value;
+  if (!search_project.value) return projects.value;
 
   const search_term = search_project.value.toLowerCase();
 
-  return sample_projects.value.filter((project: Project) => {
+  return projects.value.filter((project: Project) => {
     return (
       project.title.toLowerCase().includes(search_term) ||
       project.client.toLowerCase().includes(search_term) ||
@@ -30,29 +34,6 @@ definePageMeta({
   layout: "main"
 })
 
-const sample_projects = ref<Project[]>([{
-  id: 1,
-  title: "SKLoud App",
-  client: "The People",
-  is_tracked: true,
-  progress: 50,
-  access: "Public",
-}, {
-  id: 2,
-  title: "Marketing",
-  client: "The People",
-  is_tracked: false,
-  progress: 90,
-  access: "Public",
-}, {
-  id: 3,
-  title: "Attendance Tracker",
-  client: "SKLoud",
-  is_tracked: true,
-  progress: 20,
-  access: "Private",
-
-}])
 
 const columns: TableColumn<Project>[] = [
   {
@@ -90,11 +71,11 @@ const columns: TableColumn<Project>[] = [
     cell: ({ row }) => row.getValue('client')
   },
   {
-    accessorKey: 'tracked',
+    accessorKey: 'is_tracked',
     header: 'Status',
     cell: ({ row }) => {
       // Logic: Map boolean true/false to Success/Neutral colors
-      const is_tracked = row.getValue('tracked') as boolean
+      const is_tracked = row.getValue('is_tracked') as boolean
 
       return h(UBadge, {
         class: 'capitalize',
@@ -192,7 +173,7 @@ const columns: TableColumn<Project>[] = [
 
     <div>
       <h1 class="text-center text-lg text-black font-bold rounded-t-lg bg-gray-200">Projects</h1>
-      <UTable ref="table" :data="filtered_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-md">
+      <UTable ref="table" :data="filtered_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-lg">
         <template #expanded="{ row }">
           <div class="p-4 bg-gray-50/50">
             <h3 class="text-sm font-bold mb-2">Detailed Project Metadata</h3>

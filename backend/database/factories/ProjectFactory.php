@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Access;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,10 +15,15 @@ class ProjectFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
         return [
-            //
+            'title' => fake()->text(),
+            'client' => fake()->name(),
+            'is_tracked' => fake()->boolean(),
+            'progress' => fake()->randomDigit(),
+            'access' => fake()->randomElement(Access::class),
         ];
     }
 }
