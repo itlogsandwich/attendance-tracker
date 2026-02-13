@@ -19,11 +19,11 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-        'title' => fake()->text(),
-        'client'=> fake()->name(),
-        'is_tracked'=> fake()->boolean(),
-        'progress'=>fake()->randomDigit(),
-        'access'=>fake()->randomElement(Access::class),
+            'title' => fake()->text(),
+            'client' => fake()->name(),
+            'is_tracked' => fake()->boolean(),
+            'progress' => fake()->randomDigit(),
+            'access' => fake()->randomElement(Access::class),
         ];
     }
 }
