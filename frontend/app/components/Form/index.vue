@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
@@ -19,9 +18,7 @@ const emit = defineEmits<{
   (e: 'submit', data: Schema): void
 }>()
 
-const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
   emit('submit', event.data)
 }
 

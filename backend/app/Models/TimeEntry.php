@@ -16,10 +16,10 @@ class TimeEntry extends Model
         'project_id',
         'start_time',
         'end_time',
-        'total_seconds'
+        'total_seconds',
     ];
 
-    function project(): BelongsTo
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }

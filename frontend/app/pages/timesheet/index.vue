@@ -22,12 +22,10 @@ async function startTimer() {
 
   const now = new Date();
   try {
-    const response_cookie = await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
+    await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
       method: 'GET',
       credentials: 'include',
     });
-    console.log("CSRF Cookie Response:", response_cookie);
-
     const xsrfToken = useCookie('XSRF-TOKEN').value;
 
     const response = await $fetch<TimeEntry>(`${config.public.apiBase}/time-entries`, {

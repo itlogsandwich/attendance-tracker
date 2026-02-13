@@ -173,7 +173,7 @@ const columns: TableColumn<Project>[] = [
 
     <div>
       <h1 class="text-center text-lg text-black font-bold rounded-t-lg bg-gray-200">Projects</h1>
-      <UTable ref="table" :data="filtered_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-md">
+      <UTable ref="table" :data="filtered_projects" :columns="columns" sticky class="flex-1 shadow-lg rounded-b-lg">
         <template #expanded="{ row }">
           <div class="p-4 bg-gray-50/50">
             <h3 class="text-sm font-bold mb-2">Detailed Project Metadata</h3>
