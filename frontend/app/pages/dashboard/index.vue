@@ -57,6 +57,60 @@ const filter_who = [
   },
 ]
 
+const project_distribution = computed(() => {
+  const map = new Map<number, number>();
+
+  entries.value.forEach(entry => {
+    if (entry.project_id) {
+      const current = map.get(entry.project_id) || 0;
+      map.set(entry.project_id, current + entry.total_seconds);
+    }
+  });
+
+  return projects.value
+    .filter(p => map.has(p.id))
+    .map(p => ({
+      name: p.title,
+      value: Math.round((map.get(p.id) || 0) / 3600 * 10) / 10
+    }))
+    .sort((a, b) => b.value - a.value);
+})
+
+const chart_option = computed(() => ({
+  tooltip: {
+    trigger: 'item',
+    formatter: '{b}: {c} hrs ({d}%)'
+  },
+  legend: {
+    top: '5%',
+    left: 'center'
+  },
+  series: [
+    {
+      name: 'Time per Project',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false,
+        position: 'center'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 20,
+          fontWeight: 'bold'
+        }
+      },
+      data: project_distribution.value
+    }
+  ]
+}));
 </script>
 <template>
   <AppPanel title="Dashboard">
@@ -101,8 +155,15 @@ const filter_who = [
             </div>
           </div>
           <div class="w-full h-86 items-center text-center content-center">
-            <div>
-              <h1>SOME SORT OF GRAPH AND CHARTS </h1>
+            <div class="w-full h-86 items-center text-center content-center p-4">
+              <div v-if="project_distribution.length > 0" class="h-75 w-full">
+                <VChart class="h-full w-full" :option="chart_option" autoresize />
+              </div>
+
+              <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+                <UIcon name="i-lucide-bar-chart-2" class="w-12 h-12 mb-2" />
+                <p>No data available</p>
+              </div>
             </div>
           </div>
 

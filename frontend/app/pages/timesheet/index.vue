@@ -7,6 +7,8 @@ definePageMeta({
 
 const config = useRuntimeConfig();
 
+const { user } = useUserSession();
+
 const { data: entries, refresh } = await useFetch<TimeEntry[]>(`${config.public.apiBase}/time-entries`);
 
 const search_task = ref<string>("");
