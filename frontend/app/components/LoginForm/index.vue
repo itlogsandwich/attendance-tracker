@@ -39,7 +39,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UButton type="submit">
           Submit
         </UButton>
+        <ULink to="/register" class="flex items-center text-center justify-center gap-2">
+          <span class="content-center text-center text-white underline hover:text-blue-900"> Don't have an
+            account?</span>
+        </ULink>
       </UForm>
+
     </UCard>
   </UContainer>
 </template>

@@ -6,7 +6,7 @@ const toast = useToast();
 const config = useRuntimeConfig();
 
 
-async function handleLogin(formData: any) {
+async function handleRegister(formData: any) {
   try {
 
     await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
@@ -16,7 +16,7 @@ async function handleLogin(formData: any) {
 
     const xsrfToken = useCookie('XSRF-TOKEN').value;
 
-    await $fetch(`${config.public.apiBase}/login`, {
+    await $fetch(`${config.public.apiBase}/register`, {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -26,13 +26,13 @@ async function handleLogin(formData: any) {
       },
     });
 
-    toast.add({ title: "Welcome back!", color: "success" })
-    navigateTo("/dashboard")
+    toast.add({ title: "Registered!", color: "success" })
+    navigateTo("/")
   }
   catch (err: any) {
-    const message = err.response?._data?.message || "Invalid credentials"
-    toast.add({ title: 'Login Failed', description: message, color: 'error' })
-    console.error("Failed to login", err);
+    const message = err.response?._data?.message || "An error has occured"
+    toast.add({ title: 'Register Failed', description: message, color: 'error' })
+    console.error("Failed to register", err);
   }
 }
 
@@ -41,12 +41,9 @@ async function handleLogin(formData: any) {
 <template>
   <main>
     <div class="flex flex-row min-h-svh h-screen w-screen">
-      <div class="flex-1 h-full items-center justify-center content-center text-center bg-gray-200">
-        <h1> Keep track of your time, and never miss a task. </h1>
-      </div>
       <div class="flex-1 h-full items-center justify-center content-center text-center bg-gray-50">
         <UContainer class="max-w-lg">
-          <LoginForm @submit="handleLogin" />
+          <RegisterForm @submit="handleRegister" />
         </UContainer>
       </div>
     </div>

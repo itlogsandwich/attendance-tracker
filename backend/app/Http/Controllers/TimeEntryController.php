@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TimeEntry;
+use App\Modes\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -10,7 +11,7 @@ class TimeEntryController extends Controller
 {
     public function index()
     {
-        $timeEntries = TimeEntry::all();
+        $timeEntries = TimeEntry::with(["project:id,title", "user:id,name"])->get();
 
         return response()->json($timeEntries, 200);
     }
@@ -19,13 +20,15 @@ class TimeEntryController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
-            'project_id' => 'nullable',
+            'project_id' => 'nullable|numeric',
+            'user_id' => 'required|numeric',
             'start_time' => 'required|date',
         ]);
 
         $timeEntry = TimeEntry::create([
             'title' => $validated['title'],
             'project_id' => $validated['project_id'] ?? null,
+            'user_id' => $validated['user_id'],
             'start_time' => $validated['start_time'],
             'end_time' => null,
             'total_seconds' => 0,

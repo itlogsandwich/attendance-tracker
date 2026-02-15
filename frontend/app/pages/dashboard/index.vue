@@ -57,6 +57,86 @@ const filter_who = [
   },
 ]
 
+const project_distribution = computed(() => {
+  const map = new Map<number, number>();
+
+  entries.value.forEach(entry => {
+    if (entry.project_id) {
+      const current = map.get(entry.project_id) || 0;
+      map.set(entry.project_id, current + entry.total_seconds);
+    }
+  });
+
+  return projects.value
+    .filter(p => map.has(p.id))
+    .map(p => ({
+      name: p.title,
+      value: map.get(p.id) || 0
+    }))
+    .sort((a, b) => b.value - a.value);
+})
+
+const chart_option = computed(() => ({
+  tooltip: {
+    trigger: 'item',
+    formatter: (params: any) => {
+      const seconds = params.value;
+      const formatted = formatDuration(seconds);
+      return `${params.name}<br/><strong>${formatted}</strong> (${params.percent}%)`;
+    }
+  },
+  legend: {
+    top: '5%',
+    left: 'center'
+  },
+  series: [
+    {
+      name: 'Time per Project',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2
+      },
+      label: {
+        show: false,
+        position: 'center'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 20,
+          fontWeight: 'bold',
+          formatter: (params: any) => formatDuration(params.value),
+        }
+      },
+      data: project_distribution.value
+    }
+  ]
+
+}));
+
+const top_project = computed(() => {
+  let max: number = 0;
+  let project_id = 0;
+  let project_name: string = ""
+  entries.value.forEach(entry => {
+    if (entry.project_id) {
+      max = Math.max(entry.total_seconds);
+      project_id = entry.project_id;
+    }
+  });
+
+  projects.value.forEach(project => {
+    if (project.id === project_id)
+      project_name = project.title;
+  })
+
+  return project_name;
+});
+
 </script>
 <template>
   <AppPanel title="Dashboard">
@@ -84,7 +164,7 @@ const filter_who = [
 
     <div class=" flex flex-row w-full h-full gap-6 mb-2">
 
-      <div class="w-full h-[800px] rounded-lg bg-gray-50 shadow-lg">
+      <div class="w-full h-200 rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col items-center">
           <div class="grid grid-cols-3 rounded-t-md items-center text-center w-full h-30 bg-gray-200">
             <div>
@@ -93,7 +173,7 @@ const filter_who = [
             </div>
             <div>
               <h1 class="text-2xl"> Top Project </h1>
-              <h2 class="text-lg"> Locking In </h2>
+              <h2 class="text-lg"> {{ top_project }} </h2>
             </div>
             <div>
               <h1 class="text-2xl"> Top Client </h1>
@@ -101,28 +181,39 @@ const filter_who = [
             </div>
           </div>
           <div class="w-full h-86 items-center text-center content-center">
-            <div>
-              <h1>SOME SORT OF GRAPH AND CHARTS </h1>
+            <div class="w-full h-86 items-center text-center content-center p-4">
+              <div v-if="project_distribution.length > 0" class="h-75 w-full">
+                <VChart class="h-full w-full" :option="chart_option" autoresize />
+              </div>
+
+              <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+                <UIcon name="i-lucide-bar-chart-2" class="w-12 h-12 mb-2" />
+                <p>No data available</p>
+              </div>
             </div>
           </div>
 
           <div class="grid grid-cols-2 items-center text-center  w-full h-86">
-            <div>
-              <h1>
-                Some Sort of Chart
-              </h1>
+            <div v-if="project_distribution.length > 0" class="h-75 w-full">
+              <VChart class="h-full w-full" :option="chart_option" autoresize />
             </div>
-            <div>
-              <h1>
-                Some Sort of Chart
-              </h1>
+            <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+              <UIcon name="i-lucide-bar-chart-2" class="w-12 h-12 mb-2" />
+              <p>No data available</p>
+            </div>
+            <div v-if="project_distribution.length > 0" class="h-75 w-full">
+              <VChart class="h-full w-full" :option="chart_option" autoresize />
+            </div>
+            <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+              <UIcon name="i-lucide-bar-chart-2" class="w-12 h-12 mb-2" />
+              <p>No data available</p>
             </div>
           </div>
 
         </div>
       </div>
 
-      <div class="w-1/3 h-[800px] rounded-lg bg-gray-50 shadow-lg">
+      <div class="w-1/3 h-200 rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col m-20 justify-items-center justify-center align-center text-center">
           <div class="w-full my-4 p-20 bg-red-400">
             01

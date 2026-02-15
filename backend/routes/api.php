@@ -15,6 +15,7 @@ Route::prefix('v1')->group(function () {
     //Users
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/login', [UserController::class, 'login']);
+    Route::post('/register', [UserController::class, 'register']);
 
     //TimeEntries
     Route::get('/time-entries', [TimeEntryController::class, 'index'])->name("timeEntries.index");
