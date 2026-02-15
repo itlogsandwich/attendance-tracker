@@ -71,7 +71,7 @@ const project_distribution = computed(() => {
     .filter(p => map.has(p.id))
     .map(p => ({
       name: p.title,
-      value: Math.round((map.get(p.id) || 0) / 3600 * 10) / 10
+      value: map.get(p.id) || 0
     }))
     .sort((a, b) => b.value - a.value);
 })
@@ -79,7 +79,11 @@ const project_distribution = computed(() => {
 const chart_option = computed(() => ({
   tooltip: {
     trigger: 'item',
-    formatter: '{b}: {c} hrs ({d}%)'
+    formatter: (params: any) => {
+      const seconds = params.value;
+      const formatted = formatDuration(seconds); // Use your existing helper
+      return `${params.name}<br/><strong>${formatted}</strong> (${params.percent}%)`;
+    }
   },
   legend: {
     top: '5%',
@@ -104,13 +108,35 @@ const chart_option = computed(() => ({
         label: {
           show: true,
           fontSize: 20,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          formatter: (params: any) => formatDuration(params.value),
         }
       },
       data: project_distribution.value
     }
   ]
+
 }));
+
+const top_project = computed(() => {
+  let max: number = 0;
+  let project_id = 0;
+  let project_name: string = ""
+  entries.value.forEach(entry => {
+    if (entry.project_id) {
+      max = Math.max(entry.total_seconds);
+      project_id = entry.project_id;
+    }
+  });
+
+  projects.value.forEach(project => {
+    if (project.id === project_id)
+      project_name = project.title;
+  })
+
+  return project_name;
+});
+
 </script>
 <template>
   <AppPanel title="Dashboard">
@@ -147,7 +173,7 @@ const chart_option = computed(() => ({
             </div>
             <div>
               <h1 class="text-2xl"> Top Project </h1>
-              <h2 class="text-lg"> Locking In </h2>
+              <h2 class="text-lg"> {{ top_project }} </h2>
             </div>
             <div>
               <h1 class="text-2xl"> Top Client </h1>
@@ -168,15 +194,19 @@ const chart_option = computed(() => ({
           </div>
 
           <div class="grid grid-cols-2 items-center text-center  w-full h-86">
-            <div>
-              <h1>
-                Some Sort of Chart
-              </h1>
+            <div v-if="project_distribution.length > 0" class="h-75 w-full">
+              <VChart class="h-full w-full" :option="chart_option" autoresize />
             </div>
-            <div>
-              <h1>
-                Some Sort of Chart
-              </h1>
+            <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+              <UIcon name="i-lucide-bar-chart-2" class="w-12 h-12 mb-2" />
+              <p>No data available</p>
+            </div>
+            <div v-if="project_distribution.length > 0" class="h-75 w-full">
+              <VChart class="h-full w-full" :option="chart_option" autoresize />
+            </div>
+            <div v-else class="flex flex-col items-center justify-center h-full text-gray-400">
+              <UIcon name="i-lucide-bar-chart-2" class="w-12 h-12 mb-2" />
+              <p>No data available</p>
             </div>
           </div>
 
