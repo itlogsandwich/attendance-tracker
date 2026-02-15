@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    private function index()
     {
         $users = User::all();
 
         return response()->json($users, 200);
     }
 
-    public function login(LoginRequest $request)
+    private function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
@@ -30,7 +30,7 @@ class UserController extends Controller
         return response()->json(['message' => 'Credentials do not match'], 422);
     }
 
-    public function register(RegisterRequest $request)
+    private function register(RegisterRequest $request)
     {
         $validated = $request->validated();
 
