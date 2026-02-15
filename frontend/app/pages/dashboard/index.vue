@@ -81,7 +81,7 @@ const chart_option = computed(() => ({
     trigger: 'item',
     formatter: (params: any) => {
       const seconds = params.value;
-      const formatted = formatDuration(seconds); // Use your existing helper
+      const formatted = formatDuration(seconds);
       return `${params.name}<br/><strong>${formatted}</strong> (${params.percent}%)`;
     }
   },
