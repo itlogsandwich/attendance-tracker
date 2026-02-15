@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Enums;
 
-enum Access: string {
+enum Access: string
+{
     case PUBLIC = "Public";
     case PRIVATE = "Private";
-};
+}

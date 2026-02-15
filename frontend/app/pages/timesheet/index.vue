@@ -9,6 +9,29 @@ const config = useRuntimeConfig();
 
 const { user } = useUserSession();
 
+const { data: projects } = await useFetch<Project[]>(`${config.public.apiBase}/projects`);
+
+const selected_project = ref<string>("Project");
+const selected_id = ref<number | null>(null);
+
+const filter_project_dropdown = computed(() => {
+  if (!projects.value) return [];
+
+
+  return [
+    projects.value.map((project) => ({
+      label: project.title,
+      icon: "i-lucide-file-text",
+      onSelect: () => {
+        selected_project.value = project.title;
+        selected_id.value = project.id;
+      },
+
+    }))
+  ]
+
+});
+
 const { data: entries, refresh } = await useFetch<TimeEntry[]>(`${config.public.apiBase}/time-entries`);
 
 const search_task = ref<string>("");
@@ -21,6 +44,7 @@ let timer_interval: ReturnType<typeof setInterval> | null = null;
 
 async function startTimer() {
   if (current_entry.value) return;
+  if (!selected_project.value) return;
 
   const now = new Date();
   try {
@@ -39,7 +63,8 @@ async function startTimer() {
       },
       body: {
         title: search_task.value.trim(),
-        project_id: null,
+        project_id: selected_id.value,
+        user_id: 1,
         start_time: now.toISOString(),
       }
     });
@@ -106,9 +131,10 @@ async function stopTimer() {
       class="flex w-full h-16 bg-white shadow-md rounded-md border border-gray-100 items-center px-4 gap-4 mb-10">
       <UInput v-model="search_task" placeholder="What project are you working on?" class="flex-1"
         :ui="{ base: 'text-md' }" />
-
       <div class="items-center text-center">
-        <span class="self-end text-center"> PROJECT NAME </span>
+        <UDropdownMenu :items="filter_project_dropdown" arrow :content="{ side: 'bottom', align: 'start' }">
+          <UButton trailing-icon="i-lucide-chevron-down" :label="selected_project" color="neutral" variant="subtle" />
+        </UDropdownMenu>
       </div>
       <div class="flex items-center h-8 gap-4 flex-none">
         <USeparator orientation="vertical" />
@@ -143,7 +169,7 @@ async function stopTimer() {
       </div>
 
       <div class="flex flex-row items-center p-1 gap-4">
-        <UInput v-model="search_task" class="flex-none" :ui="{ base: 'text-md' }" />
+        <UInput v-bind:placeholder="entry.title" :ui="{ base: 'text-md' }" />
 
         <div class="flex-1 items-center">
           <span class="text-l"> {{ entry.project?.title || "No Project" }}</span>

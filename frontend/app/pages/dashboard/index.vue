@@ -138,7 +138,7 @@ const chart_option = computed(() => ({
 
     <div class=" flex flex-row w-full h-full gap-6 mb-2">
 
-      <div class="w-full h-[800px] rounded-lg bg-gray-50 shadow-lg">
+      <div class="w-full h-200 rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col items-center">
           <div class="grid grid-cols-3 rounded-t-md items-center text-center w-full h-30 bg-gray-200">
             <div>
@@ -183,7 +183,7 @@ const chart_option = computed(() => ({
         </div>
       </div>
 
-      <div class="w-1/3 h-[800px] rounded-lg bg-gray-50 shadow-lg">
+      <div class="w-1/3 h-200 rounded-lg bg-gray-50 shadow-lg">
         <div class="flex flex-col m-20 justify-items-center justify-center align-center text-center">
           <div class="w-full my-4 p-20 bg-red-400">
             01
