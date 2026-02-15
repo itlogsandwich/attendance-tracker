@@ -1,4 +1,4 @@
-# attendance-tracker
+# attendance-tracker [W.I.P]
 Attendance tracker for skloud (practice)
 Still incomplete, but slowly tryna finish it frfr (I keep getting confused with the syntax of Typescript. Rust FTW)
 ## About
