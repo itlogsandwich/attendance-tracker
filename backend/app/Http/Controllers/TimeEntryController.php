@@ -9,14 +9,14 @@ use Illuminate\Support\Carbon;
 
 class TimeEntryController extends Controller
 {
-    public function index()
+    private function index()
     {
         $timeEntries = TimeEntry::with(["project:id,title", "user:id,name"])->get();
 
         return response()->json($timeEntries, 200);
     }
 
-    public function startTimeEntry(Request $request)
+    private function startTimeEntry(Request $request)
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
@@ -37,7 +37,7 @@ class TimeEntryController extends Controller
         return response()->json($timeEntry, 201);
     }
 
-    public function stopTimeEntry(Request $request, $id)
+    private function stopTimeEntry(Request $request, $id)
     {
         $validated = $request->validate([
             'end_time' => 'required|date',
